@@ -11,7 +11,6 @@
 * Config
 
 #+BEGIN_SRC elisp
-(require 'dired-git-info)
 (with-eval-after-load 'dired
   (define-key dired-mode-map ")" 'dgi-toggle-git-info))
 #+END_SRC
