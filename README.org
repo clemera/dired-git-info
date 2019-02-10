@@ -1,6 +1,7 @@
 * Description
 
-[[./images/screenshot.png]]
+[[./images/screenshot2.png]]
+
 
 * Installation
 
