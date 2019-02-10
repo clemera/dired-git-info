@@ -331,4 +331,4 @@ info format and defaults to `dgi-commit-message-format'."
 
 
 (provide 'dired-git-info)
-;;; dgi.el ends here
+;;; dired-git-info.el ends here
