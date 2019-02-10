@@ -257,7 +257,8 @@ git-log PRETTY FORMATS):
 
 FILE default to current dired file. GITF determines the commit
 info format and defaults to `dgi-commit-message-format'."
-  (when (locate-dominating-file "." ".git")
+  (if (not (locate-dominating-file "." ".git"))
+      (user-error "Not inside a git repo")
     (let* ((file (or file (dired-get-file-for-visit)))
            (lfile (and file
                        ;; get the actual displayed name, to make it work with
@@ -271,7 +272,7 @@ info format and defaults to `dgi-commit-message-format'."
                     "git" "log" "-1"
                     (concat "--pretty="
                             (or gitf dgi-commit-message-format))
-                      lfile)))
+                    lfile)))
           (when (and msg (not (string= "" msg)))
             (substring msg
                        ;; skip newline
@@ -281,15 +282,15 @@ info format and defaults to `dgi-commit-message-format'."
   "Execute BODY and restore marks afterwards."
   `(let ((marked (save-excursion
                    (goto-char (point-min))
-                   (dired-get-marked-files))))
+                   (dired-get-marked-files)))
+         (inhibit-message t))
      (save-excursion
        (unwind-protect
            (progn ,@body)
-         (let ((inhibit-message t))
-           (dired-unmark-all-marks)
+         (dired-unmark-all-marks)
            (dolist (file marked)
              (dired-goto-file file)
-             (dired-mark 1)))))))
+             (dired-mark 1))))))
 
 (defun dgi--cleanup ()
   (dolist (ov dgi--commit-ovs)
@@ -316,17 +317,18 @@ info format and defaults to `dgi-commit-message-format'."
           (dolist (file files (nreverse messages))
             (push (dgi--get-commit-info file)
                   messages)))
-    (with-current-buffer (get-buffer-create " *temp*")
-      (erase-buffer)
-      (dolist (message messages)
-        (insert (or message "") "\n"))
-      (align-regexp (point-min)
-                    (point-max)
-                    "\\(\\s-*\\)\t" nil nil t)
-      (goto-char (point-min))
-      (while (search-forward "\t" nil t)
-        (replace-match " "))
-      (split-string (buffer-string) "\n"))))
+    (with-current-buffer (get-buffer-create " *dired-git-info*")
+      (let ((inhibit-read-only nil))
+        (erase-buffer)
+        (dolist (message messages)
+          (insert (or message "") "\n"))
+        (align-regexp (point-min)
+                      (point-max)
+                      "\\(\\s-*\\)\t" nil nil t)
+        (goto-char (point-min))
+        (while (search-forward "\t" nil t)
+          (replace-match " "))
+        (split-string (buffer-string) "\n")))))
 
 
 ;;;###autoload
