@@ -266,8 +266,7 @@ info format and defaults to `dgi-commit-message-format'."
                        (save-excursion
                          (dired-goto-file file)
                          (buffer-substring (point) (line-end-position))))))
-      (when (and lfile
-                 (not (member lfile '(".." "."))))
+      (when (and lfile (not (member lfile '(".." "."))))
         (let ((msg (dgi--command-to-string
                     "git" "log" "-1"
                     (concat "--pretty="
@@ -293,18 +292,21 @@ info format and defaults to `dgi-commit-message-format'."
              (dired-mark 1))))))
 
 (defun dgi--cleanup ()
+  "Remove commit overlays."
   (dolist (ov dgi--commit-ovs)
     (delete-overlay ov))
   (setq dgi--commit-ovs nil))
 
 
 (defun dgi--get-dired-files-length (files)
+  "Get list of lengths of all FILES as displayed by dired."
   (let ((dnames ()))
     (dolist (file files (nreverse dnames))
       (push (dgi--get-dired-file-length file)
             dnames))))
 
 (defun dgi--get-dired-file-length (file)
+  "Get lengths of FILE as displayed by dired."
   (save-excursion
     (dired-goto-file file)
     (length (buffer-substring (point)
@@ -312,6 +314,7 @@ info format and defaults to `dgi-commit-message-format'."
 
 
 (defun dgi--get-commit-messages (files)
+  "Get formatted commit messages for FILES."
   (let ((messages ()))
     (setq messages
           (dolist (file files (nreverse messages))
