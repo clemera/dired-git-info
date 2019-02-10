@@ -34,6 +34,12 @@
   '((t (:inherit font-lock-comment-face)))
   "Face for commit message overlays.")
 
+(defvar dgi-auto-hide-details t
+  "If details should get hidden automatically.
+
+Uses `dired-hide-details-mode' to hide details when showing git
+info.")
+
 (defvar dgi-commit-message-format "%s\t%cr"
   "Format of the commit messages.
 
@@ -342,6 +348,9 @@ info format and defaults to `dgi-commit-message-format'."
     (user-error "Not in a dired buffer"))
   (if dgi--commit-ovs
       (dgi--cleanup)
+    (when dgi-auto-hide-details
+      (unless dired-hide-details-mode
+        (dired-hide-details-mode 1)))
     (let* ((files (dgi--save-marked
                    (dired-unmark-all-marks)
                    (dired-toggle-marks)
