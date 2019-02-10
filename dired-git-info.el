@@ -29,8 +29,6 @@
 ;;; Code:
 
 
-(defvar dgi-commit-ovs nil
-  "Overlays which show the commit messages.")
 
 (defface dgi-commit-message-face
   '((t (:inherit font-lock-comment-face)))
@@ -244,14 +242,16 @@ The placeholders are (from git-log PRETTY FORMATS):
        is inserted immediately before the expansion if and only
        if the placeholder expands to a non-empty string.")
 
+(defvar dgi--commit-ovs nil
+  "Overlays which show the commit messages.")
 
-(defun dgi-command-to-string (program &rest args)
+(defun dgi--command-to-string (program &rest args)
   "Execute PROGRAM with arguments ARGS and return output string."
   (with-output-to-string
     (with-current-buffer standard-output
       (apply #'process-file program nil t nil args))))
 
-(defun dgi-get-commit-info (&optional file gitf)
+(defun dgi--get-commit-info (&optional file gitf)
   "Get commit message info.
 
 FILE default to current dired file. GITF determines the commit
@@ -266,7 +266,7 @@ info format and defaults to `dgi-commit-message-format'."
                          (buffer-substring (point) (line-end-position))))))
       (when (and lfile
                  (not (member lfile '(".." "."))))
-        (let ((msg (dgi-command-to-string
+        (let ((msg (dgi--command-to-string
                     "git" "log" "-1"
                     (concat "--pretty="
                             (or gitf dgi-commit-message-format))
@@ -290,11 +290,16 @@ info format and defaults to `dgi-commit-message-format'."
              (dired-goto-file file)
              (dired-mark 1)))))))
 
+(defun dgi--cleanup ()
+  (dolist (ov dgi--commit-ovs)
+    (delete-overlay ov))
+  (setq dgi--commit-ovs nil))
+
 (defun dgi-toggle-git-info ()
   "Toggle git message info in current dired buffer."
   (interactive)
-  (if dgi-commit-ovs
-      (dgi-cleanup)
+  (if dgi--commit-ovs
+      (dgi--cleanup)
     (let* ((files (dgi-save-marked
                    (dired-unmark-all-marks)
                    (dired-toggle-marks)
@@ -305,7 +310,7 @@ info format and defaults to `dgi-commit-message-format'."
            (minspc  (1+ (length (file-name-nondirectory (car files))))))
       (save-excursion
         (dolist (file files)
-          (let ((msg (dgi-get-commit-info file)))
+          (let ((msg (dgi--get-commit-info file)))
             (when msg
               (let ((spc (make-string
                           (- minspc (length (file-name-nondirectory file)))
@@ -317,18 +322,12 @@ info format and defaults to `dgi-commit-message-format'."
                                    (propertize
                                     msg 'face 'dgi-commit-message-face)
                                    "\n")))
-                  (push ov dgi-commit-ovs)
+                  (push ov dgi--commit-ovs)
                   ;; I don't use after-string because I didn't get it to work
                   ;; in combination with hl-line-mode overlay
                   (overlay-put ov 'display ovs)
                   ;; hl line mode should have priority
                   (overlay-put ov 'priority -60))))))))))
-
-(defun dgi-cleanup ()
-  (dolist (ov dgi-commit-ovs)
-    (delete-overlay ov))
-  (setq dgi-commit-ovs nil))
-
 
 
 (provide 'dired-git-info)
