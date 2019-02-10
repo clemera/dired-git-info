@@ -260,7 +260,7 @@ info format and defaults to `dgi-commit-message-format'."
   (if (not (locate-dominating-file "." ".git"))
       (user-error "Not inside a git repo")
     (let* ((file (or file (dired-get-file-for-visit)))
-           (lfile (and file
+           (lfile (and (file-exists-p file)
                        ;; get the actual displayed name, to make it work with
                        ;; dired collapse for example
                        (save-excursion
