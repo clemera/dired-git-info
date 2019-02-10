@@ -37,8 +37,8 @@
 (defvar dgi-commit-message-format "%s\t%cr"
   "Format of the commit messages.
 
-Placeholders have to be separated by tabs. The placeholders
-are (from git-log PRETTY FORMATS):
+Entries separated by tabs are aligned. The placeholders are (from
+git-log PRETTY FORMATS):
 
            · %H: commit hash
 
