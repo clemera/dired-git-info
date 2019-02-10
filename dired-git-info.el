@@ -276,7 +276,7 @@ info format and defaults to `dgi-commit-message-format'."
                        ;; skip newline
                        0 -1)))))))
 
-(defmacro dgi-save-marked (&rest body)
+(defmacro dgi--save-marked (&rest body)
   "Execute BODY and restore marks afterwards."
   `(let ((marked (save-excursion
                    (goto-char (point-min))
@@ -300,7 +300,7 @@ info format and defaults to `dgi-commit-message-format'."
   (interactive)
   (if dgi--commit-ovs
       (dgi--cleanup)
-    (let* ((files (dgi-save-marked
+    (let* ((files (dgi--save-marked
                    (dired-unmark-all-marks)
                    (dired-toggle-marks)
                    (sort (dired-get-marked-files)
