@@ -1,0 +1,11 @@
+* Description
+
+[[./images/screenshot.png]]
+
+* Config
+
+#+BEGIN_SRC elisp
+(add-to-list 'load-path "/path/to/file")
+(with-eval-after-load 'dired
+  (define-key dired-mode-map ")" 'dgi-toggle-git-info))
+#+END_SRC
