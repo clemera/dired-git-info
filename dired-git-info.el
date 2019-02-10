@@ -34,10 +34,11 @@
   '((t (:inherit font-lock-comment-face)))
   "Face for commit message overlays.")
 
-(defvar dgi-commit-message-format "%s (%cr)"
+(defvar dgi-commit-message-format "%s\t%cr"
   "Format of the commit messages.
 
-The placeholders are (from git-log PRETTY FORMATS):
+Placeholders have to be separated by tabs. The placeholders
+are (from git-log PRETTY FORMATS):
 
            · %H: commit hash
 
@@ -309,6 +310,25 @@ info format and defaults to `dgi-commit-message-format'."
                               (line-end-position)))))
 
 
+(defun dgi--get-commit-messages (files)
+  (let ((messages ()))
+    (setq messages
+          (dolist (file files (nreverse messages))
+            (push (dgi--get-commit-info file)
+                  messages)))
+    (with-current-buffer (get-buffer-create " *temp*")
+      (erase-buffer)
+      (dolist (message messages)
+        (insert (or message "") "\n"))
+      (align-regexp (point-min)
+                    (point-max)
+                    "\\(\\s-*\\)\t" nil nil t)
+      (goto-char (point-min))
+      (while (search-forward "\t" nil t)
+        (replace-match " "))
+      (split-string (buffer-string) "\n"))))
+
+
 ;;;###autoload
 (defun dgi-toggle-git-info ()
   "Toggle git message info in current dired buffer."
@@ -319,10 +339,11 @@ info format and defaults to `dgi-commit-message-format'."
                    (dired-unmark-all-marks)
                    (dired-toggle-marks)
                    (dired-get-marked-files)))
-           (minspc  (1+ (apply #'max  (dgi--get-dired-files-length files)))))
+           (minspc  (1+ (apply #'max  (dgi--get-dired-files-length files))))
+           (messages (dgi--get-commit-messages files)))
       (save-excursion
         (dolist (file files)
-          (let ((msg (dgi--get-commit-info file)))
+          (let ((msg (pop messages)))
             (when msg
               (dired-goto-file file)
               (let ((spc (make-string
