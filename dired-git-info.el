@@ -243,7 +243,7 @@ git-log PRETTY FORMATS):
        is inserted immediately before the expansion if and only
        if the placeholder expands to a non-empty string.")
 
-(defvar dgi--commit-ovs nil
+(defvar-local dgi--commit-ovs nil
   "Overlays which show the commit messages.")
 
 (defun dgi--command-to-string (program &rest args)
@@ -338,6 +338,8 @@ info format and defaults to `dgi-commit-message-format'."
 (defun dgi-toggle-git-info ()
   "Toggle git message info in current dired buffer."
   (interactive)
+  (unless (eq major-mode 'dired-mode)
+    (user-error "Not in a dired buffer"))
   (if dgi--commit-ovs
       (dgi--cleanup)
     (let* ((files (dgi--save-marked
@@ -370,3 +372,11 @@ info format and defaults to `dgi-commit-message-format'."
 
 (provide 'dired-git-info)
 ;;; dired-git-info.el ends here
+
+
+
+
+
+
+
+
