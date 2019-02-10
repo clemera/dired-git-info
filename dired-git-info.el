@@ -295,6 +295,8 @@ info format and defaults to `dgi-commit-message-format'."
     (delete-overlay ov))
   (setq dgi--commit-ovs nil))
 
+
+;;;###autoload
 (defun dgi-toggle-git-info ()
   "Toggle git message info in current dired buffer."
   (interactive)

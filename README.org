@@ -2,10 +2,16 @@
 
 [[./images/screenshot.png]]
 
+* Installation
+
+#+BEGIN_SRC elisp
+(package-install-file "/path/to/file.el")
+#+END_SRC
+
 * Config
 
 #+BEGIN_SRC elisp
-(add-to-list 'load-path "/path/to/file")
+(require 'dired-git-info)
 (with-eval-after-load 'dired
   (define-key dired-mode-map ")" 'dgi-toggle-git-info))
 #+END_SRC
