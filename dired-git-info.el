@@ -296,6 +296,19 @@ info format and defaults to `dgi-commit-message-format'."
   (setq dgi--commit-ovs nil))
 
 
+(defun dgi--get-dired-files-length (files)
+  (let ((dnames ()))
+    (dolist (file files (nreverse dnames))
+      (push (dgi--get-dired-file-length file)
+            dnames))))
+
+(defun dgi--get-dired-file-length (file)
+  (save-excursion
+    (dired-goto-file file)
+    (length (buffer-substring (point)
+                              (line-end-position)))))
+
+
 ;;;###autoload
 (defun dgi-toggle-git-info ()
   "Toggle git message info in current dired buffer."
@@ -305,19 +318,16 @@ info format and defaults to `dgi-commit-message-format'."
     (let* ((files (dgi--save-marked
                    (dired-unmark-all-marks)
                    (dired-toggle-marks)
-                   (sort (dired-get-marked-files)
-                         (lambda (a b)
-                           (> (length (file-name-nondirectory a))
-                              (length (file-name-nondirectory b)))))))
-           (minspc  (1+ (length (file-name-nondirectory (car files))))))
+                   (dired-get-marked-files)))
+           (minspc  (1+ (apply #'max  (dgi--get-dired-files-length files)))))
       (save-excursion
         (dolist (file files)
           (let ((msg (dgi--get-commit-info file)))
             (when msg
+              (dired-goto-file file)
               (let ((spc (make-string
-                          (- minspc (length (file-name-nondirectory file)))
+                          (- minspc (dgi--get-dired-file-length file))
                           ?\s)))
-                (dired-goto-file file)
                 (goto-char (line-end-position))
                 (let ((ov (make-overlay (point) (1+ (point))))
                       (ovs (concat spc
