@@ -1,15 +1,21 @@
 * Description
 
-[[./images/screenshot2.png]]
+This Emacs packages provides a command to show git information inside the
+dired buffer:
 
+[[./images/screenshot2.png]]
 
 * Installation
 
+For manual installation, clone the repository and call:
+
 #+BEGIN_SRC elisp
-(package-install-file "/path/to/file.el")
+(package-install-file "/path/to/dired-git-info.el")
 #+END_SRC
 
 * Config
+
+Bind the command in direds mode map:
 
 #+BEGIN_SRC elisp
 (with-eval-after-load 'dired
