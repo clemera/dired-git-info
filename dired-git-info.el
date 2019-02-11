@@ -1,11 +1,12 @@
 ;;; dired-git-info.el --- Show git info in dired -*- lexical-binding: t; -*-
-;; Copyright (C) 2019  Clemens Radermacher
+
+;; Copyright (C) 2018-2019  Free Software Foundation, Inc.
 
 ;; Author: Clemens Radermacher <clemera@posteo.net>
-;; Package-Requires: ((emacs "25"))
-;; Version: 0.1
-;; Keywords: dired, files
 ;; URL: https://github.com/clemera/dired-git-info
+;; Version: 0.1
+;; Package-Requires: ((emacs "25"))
+;; Keywords: dired, files
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
