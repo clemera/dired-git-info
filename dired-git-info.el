@@ -29,7 +29,6 @@
 ;;; Code:
 
 
-
 (defface dgi-commit-message-face
   '((t (:inherit font-lock-comment-face)))
   "Face for commit message overlays.")
@@ -74,36 +73,37 @@ are (see git-log PRETTY FORMATS for all):
 (defvar-local dgi--commit-ovs nil
   "Overlays which show the commit messages.")
 
+
 (defun dgi--command-to-string (program &rest args)
   "Execute PROGRAM with arguments ARGS and return output string."
   (with-output-to-string
     (with-current-buffer standard-output
       (apply #'process-file program nil t nil args))))
 
+
 (defun dgi--get-commit-info (&optional file gitf)
   "Get commit message info.
 
 FILE default to current dired file. GITF determines the commit
 info format and defaults to `dgi-commit-message-format'."
-  (if (not (locate-dominating-file "." ".git"))
-      (user-error "Not inside a git repo")
-    (let* ((file (or file (dired-get-file-for-visit)))
-           (lfile (and (file-exists-p file)
-                       ;; get the actual displayed name, to make it work with
-                       ;; dired collapse for example
-                       (save-excursion
-                         (dired-goto-file file)
-                         (buffer-substring (point) (line-end-position))))))
-      (when (and lfile (not (member lfile '(".." "."))))
-        (let ((msg (dgi--command-to-string
-                    "git" "log" "-1"
-                    (concat "--pretty="
-                            (or gitf dgi-commit-message-format))
-                    lfile)))
-          (when (and msg (not (string= "" msg)))
-            (substring msg
-                       ;; skip newline
-                       0 -1)))))))
+  (let* ((file (or file (dired-get-file-for-visit)))
+         (lfile (and (file-exists-p file)
+                     ;; get the actual displayed name, to make it work with
+                     ;; dired collapse for example
+                     (save-excursion
+                       (dired-goto-file file)
+                       (buffer-substring (point) (line-end-position))))))
+    (when (and lfile (not (member lfile '(".." "."))))
+      (let ((msg (dgi--command-to-string
+                  "git" "log" "-1"
+                  (concat "--pretty="
+                          (or gitf dgi-commit-message-format))
+                  lfile)))
+        (when (and msg (not (string= "" msg)))
+          (substring msg
+                     ;; skip newline
+                     0 -1))))))
+
 
 (defmacro dgi--save-marked (&rest body)
   "Execute BODY and restore marks afterwards."
@@ -118,6 +118,7 @@ info format and defaults to `dgi-commit-message-format'."
            (dolist (file marked)
              (dired-goto-file file)
              (dired-mark 1))))))
+
 
 (defun dgi--cleanup ()
   "Remove commit overlays."
@@ -134,6 +135,7 @@ info format and defaults to `dgi-commit-message-format'."
     (dolist (file files (nreverse dnames))
       (push (dgi--get-dired-file-length file)
             dnames))))
+
 
 (defun dgi--get-dired-file-length (file)
   "Get lengths of FILE as displayed by dired."
@@ -170,6 +172,8 @@ info format and defaults to `dgi-commit-message-format'."
   (interactive)
   (unless (eq major-mode 'dired-mode)
     (user-error "Not in a dired buffer"))
+  (unless (locate-dominating-file "." ".git")
+    (user-error "Not inside a git repository"))
   (if dgi--commit-ovs
       (dgi--cleanup)
     (when dgi-auto-hide-details
@@ -205,11 +209,4 @@ info format and defaults to `dgi-commit-message-format'."
 
 (provide 'dired-git-info)
 ;;; dired-git-info.el ends here
-
-
-
-
-
-
-
 
