@@ -4,7 +4,7 @@
 ;; Author: Clemens Radermacher <clemera@posteo.net>
 ;; Package-Requires: ((emacs "25"))
 ;; Version: 0.1
-;; Keywords: files
+;; Keywords: dired, files
 ;; URL: https://github.com/clemera/dired-git-info
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -29,17 +29,25 @@
 ;;; Code:
 
 
+(defgroup dired-git-info nil
+  "Show git info in dired."
+  :group 'files
+  :prefix "dgi-")
+
 (defface dgi-commit-message-face
   '((t (:inherit font-lock-comment-face)))
-  "Face for commit message overlays.")
+  "Face for commit message overlays."
+  :group 'dired-git-info)
 
-(defvar dgi-auto-hide-details-p t
+(defcustom dgi-auto-hide-details-p t
   "If details should get hidden automatically.
 
 Uses function `dired-hide-details-mode' to hide details when showing git
-info.")
+info."
+  :group 'dired-git-info
+  :type 'boolean)
 
-(defvar dgi-commit-message-format "%s\t%cr"
+(defcustom dgi-commit-message-format "%s\t%cr"
   "Format of the commit messages.
 
 Entries separated by tabs are aligned. Some common placeholders
@@ -67,7 +75,9 @@ are (see git-log PRETTY FORMATS for all):
 
            · %s: subject
 
-           · %f: sanitized subject line, suitable for a filename")
+           · %f: sanitized subject line, suitable for a filename"
+  :group 'dired-git-info
+  :type 'string)
 
 (defvar-local dgi--commit-ovs nil
   "Overlays which show the commit messages.")
