@@ -24,7 +24,7 @@
 ;;; Commentary:
 ;;
 ;; Command to show last commit message and date (info shown is configurable)
-;; of files in dired buffer of a git project.
+;; of git project files in dired.
 ;;
 
 ;;; Code:
