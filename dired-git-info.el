@@ -157,12 +157,11 @@ info format and defaults to `dgi-commit-message-format'."
 (defun dgi--get-commit-messages (files)
   "Get formatted commit messages for FILES."
   (let ((messages ()))
-    (setq messages
-          (dolist (file files (nreverse messages))
-            (push (dgi--get-commit-info file)
-                  messages)))
+    (dolist (file files)
+      (push (dgi--get-commit-info file)
+            messages))
     (with-temp-buffer
-      (dolist (message messages)
+      (dolist (message (nreverse messages))
         (insert (or message "") "\n"))
       (align-regexp (point-min)
                     (point-max)
