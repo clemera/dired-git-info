@@ -33,7 +33,7 @@
   '((t (:inherit font-lock-comment-face)))
   "Face for commit message overlays.")
 
-(defvar dgi-auto-hide-details t
+(defvar dgi-auto-hide-details-p t
   "If details should get hidden automatically.
 
 Uses `dired-hide-details-mode' to hide details when showing git
@@ -73,6 +73,8 @@ are (see git-log PRETTY FORMATS for all):
 (defvar-local dgi--commit-ovs nil
   "Overlays which show the commit messages.")
 
+(defvar dgi--restore-no-details-p nil
+  "If no details view has to be restored.")
 
 (defun dgi--command-to-string (program &rest args)
   "Execute PROGRAM with arguments ARGS and return output string."
@@ -122,7 +124,8 @@ info format and defaults to `dgi-commit-message-format'."
 
 (defun dgi--cleanup ()
   "Remove commit overlays."
-  (when dgi-auto-hide-details
+  (when dgi--restore-no-details-p
+    (setq dgi--restore-no-details-p nil)
     (dired-hide-details-mode -1))
   (dolist (ov dgi--commit-ovs)
     (delete-overlay ov))
@@ -176,8 +179,9 @@ info format and defaults to `dgi-commit-message-format'."
     (user-error "Not inside a git repository"))
   (if dgi--commit-ovs
       (dgi--cleanup)
-    (when dgi-auto-hide-details
+    (when dgi-auto-hide-details-p
       (unless dired-hide-details-mode
+        (setq dgi--restore-no-details-p t)
         (dired-hide-details-mode 1)))
     (let* ((files (dgi--save-marked
                    (dired-unmark-all-marks)
