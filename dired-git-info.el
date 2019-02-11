@@ -36,15 +36,13 @@
 
 (defface dgi-commit-message-face
   '((t (:inherit font-lock-comment-face)))
-  "Face for commit message overlays."
-  :group 'dired-git-info)
+  "Face for commit message overlays.")
 
 (defcustom dgi-auto-hide-details-p t
   "If details should get hidden automatically.
 
 Uses function `dired-hide-details-mode' to hide details when showing git
 info."
-  :group 'dired-git-info
   :type 'boolean)
 
 (defcustom dgi-commit-message-format "%s\t%cr"
@@ -76,7 +74,6 @@ are (see git-log PRETTY FORMATS for all):
            · %s: subject
 
            · %f: sanitized subject line, suitable for a filename"
-  :group 'dired-git-info
   :type 'string)
 
 (defvar-local dgi--commit-ovs nil
