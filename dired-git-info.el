@@ -164,18 +164,16 @@ info format and defaults to `dgi-commit-message-format'."
           (dolist (file files (nreverse messages))
             (push (dgi--get-commit-info file)
                   messages)))
-    (with-current-buffer (get-buffer-create " *dired-git-info*")
-      (let ((inhibit-read-only nil))
-        (erase-buffer)
-        (dolist (message messages)
-          (insert (or message "") "\n"))
-        (align-regexp (point-min)
-                      (point-max)
-                      "\\(\\s-*\\)\t" nil nil t)
-        (goto-char (point-min))
-        (while (search-forward "\t" nil t)
-          (replace-match " "))
-        (split-string (buffer-string) "\n")))))
+    (with-temp-buffer
+      (dolist (message messages)
+        (insert (or message "") "\n"))
+      (align-regexp (point-min)
+                    (point-max)
+                    "\\(\\s-*\\)\t" nil nil t)
+      (goto-char (point-min))
+      (while (search-forward "\t" nil t)
+        (replace-match " "))
+      (split-string (buffer-string) "\n"))))
 
 
 ;;;###autoload
