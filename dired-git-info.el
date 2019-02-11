@@ -79,7 +79,7 @@ are (see git-log PRETTY FORMATS for all):
 (defvar-local dgi--commit-ovs nil
   "Overlays which show the commit messages.")
 
-(defvar dgi--restore-no-details-p nil
+(defvar dgi--restore-no-details nil
   "If no details view has to be restored.")
 
 (defun dgi--command-to-string (program &rest args)
@@ -130,8 +130,8 @@ info format and defaults to `dgi-commit-message-format'."
 
 (defun dgi--cleanup ()
   "Remove commit overlays."
-  (when dgi--restore-no-details-p
-    (setq dgi--restore-no-details-p nil)
+  (when dgi--restore-no-details
+    (setq dgi--restore-no-details nil)
     (dired-hide-details-mode -1))
   (dolist (ov dgi--commit-ovs)
     (delete-overlay ov))
@@ -185,7 +185,7 @@ info format and defaults to `dgi-commit-message-format'."
       (dgi--cleanup)
     (when dgi-auto-hide-details-p
       (unless dired-hide-details-mode
-        (setq dgi--restore-no-details-p t)
+        (setq dgi--restore-no-details t)
         (dired-hide-details-mode 1)))
     (let* ((files (dgi--save-marked
                    (dired-unmark-all-marks)
