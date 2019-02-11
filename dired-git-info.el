@@ -177,7 +177,7 @@ info format and defaults to `dgi-commit-message-format'."
 (defun dgi-toggle-git-info ()
   "Toggle git message info in current dired buffer."
   (interactive)
-  (unless (eq major-mode 'dired-mode)
+  (unless (derived-mode-p 'dired-mode)
     (user-error "Not in a dired buffer"))
   (unless (locate-dominating-file "." ".git")
     (user-error "Not inside a git repository"))
