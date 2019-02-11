@@ -36,7 +36,7 @@
 (defvar dgi-auto-hide-details-p t
   "If details should get hidden automatically.
 
-Uses `dired-hide-details-mode' to hide details when showing git
+Uses function `dired-hide-details-mode' to hide details when showing git
 info.")
 
 (defvar dgi-commit-message-format "%s\t%cr"
@@ -67,8 +67,7 @@ are (see git-log PRETTY FORMATS for all):
 
            · %s: subject
 
-           · %f: sanitized subject line, suitable for a filename
-")
+           · %f: sanitized subject line, suitable for a filename")
 
 (defvar-local dgi--commit-ovs nil
   "Overlays which show the commit messages.")
@@ -108,7 +107,7 @@ info format and defaults to `dgi-commit-message-format'."
 
 
 (defmacro dgi--save-marked (&rest body)
-  "Execute BODY and restore marks afterwards."
+  "Execute BODY and restore marked files afterwards."
   `(let ((marked (save-excursion
                    (goto-char (point-min))
                    (dired-get-marked-files)))
