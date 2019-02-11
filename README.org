@@ -15,9 +15,9 @@ For manual installation, clone the repository and call:
 
 * Config
 
-Bind the command in direds mode map:
+Bind the minor mode command in direds mode map:
 
 #+BEGIN_SRC elisp
 (with-eval-after-load 'dired
-  (define-key dired-mode-map ")" 'dgi-toggle-git-info))
+  (define-key dired-mode-map ")" 'dired-git-info-mode))
 #+END_SRC
