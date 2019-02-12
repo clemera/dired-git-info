@@ -23,8 +23,8 @@
 
 ;;; Commentary:
 ;;
-;; Command to show last commit message and date (info shown is configurable)
-;; of git project files in dired.
+;; Minor mode which shows last commit message and date (info shown is
+;; configurable) for git project files in dired.
 ;;
 
 ;;; Code:
@@ -178,43 +178,42 @@ info format and defaults to `dgi-commit-message-format'."
 (define-minor-mode dired-git-info-mode
   "Toggle git message info in current dired buffer."
   :lighter " dgi"
-  (cond (dired-git-info-mode
-         (unless (derived-mode-p 'dired-mode)
-           (user-error "Not in a dired buffer"))
-         (unless (locate-dominating-file "." ".git")
-           (user-error "Not inside a git repository"))
-         (let* ((files (dgi--save-marked
-                        (dired-unmark-all-marks)
-                        (dired-toggle-marks)
-                        (dired-get-marked-files)))
-                (minspc  (1+ (apply #'max  (dgi--get-dired-files-length files))))
-                (messages (dgi--get-commit-messages files)))
-           (save-excursion
-             (dolist (file files)
-               (let ((msg (pop messages)))
-                 (when msg
-                   (dired-goto-file file)
-                   (let ((spc (make-string
-                               (- minspc (dgi--get-dired-file-length file))
-                               ?\s)))
-                     (goto-char (line-end-position))
-                     (let ((ov (make-overlay (point) (1+ (point))))
-                           (ovs (concat spc
-                                        (propertize
-                                         msg 'face 'dgi-commit-message-face)
-                                        "\n")))
-                       (push ov dgi--commit-ovs)
-                       ;; I don't use after-string because I didn't get it to work
-                       ;; in combination with hl-line-mode overlay
-                       (overlay-put ov 'display ovs)
-                       ;; hl line mode should have priority
-                       (overlay-put ov 'priority -60)))))))
-           (when dgi-auto-hide-details-p
-             (unless dired-hide-details-mode
-               (setq dgi--restore-no-details t)
-               (dired-hide-details-mode 1)))))
-        (t
-         (dgi--cleanup))))
+  (if (not dired-git-info-mode)
+      (dgi--cleanup)
+    (unless (derived-mode-p 'dired-mode)
+      (user-error "Not in a dired buffer"))
+    (unless (locate-dominating-file "." ".git")
+      (user-error "Not inside a git repository"))
+    (let* ((files (dgi--save-marked
+                   (dired-unmark-all-marks)
+                   (dired-toggle-marks)
+                   (dired-get-marked-files)))
+           (minspc  (1+ (apply #'max  (dgi--get-dired-files-length files))))
+           (messages (dgi--get-commit-messages files)))
+      (save-excursion
+        (dolist (file files)
+          (let ((msg (pop messages)))
+            (when msg
+              (dired-goto-file file)
+              (let ((spc (make-string
+                          (- minspc (dgi--get-dired-file-length file))
+                          ?\s)))
+                (goto-char (line-end-position))
+                (let ((ov (make-overlay (point) (1+ (point))))
+                      (ovs (concat spc
+                                   (propertize
+                                    msg 'face 'dgi-commit-message-face)
+                                   "\n")))
+                  (push ov dgi--commit-ovs)
+                  ;; I don't use after-string because I didn't get it to work
+                  ;; in combination with hl-line-mode overlay
+                  (overlay-put ov 'display ovs)
+                  ;; hl line mode should have priority
+                  (overlay-put ov 'priority -60)))))))
+      (when dgi-auto-hide-details-p
+        (unless dired-hide-details-mode
+          (setq dgi--restore-no-details t)
+          (dired-hide-details-mode 1))))))
 
 
 (provide 'dired-git-info)

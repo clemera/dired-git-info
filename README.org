@@ -1,7 +1,7 @@
 * Description
 
-This Emacs packages provides a command to show git information inside the
-dired buffer:
+This Emacs packages provides a minor mode which shows git information inside
+the dired buffer:
 
 [[./images/screenshot2.png]]
 
@@ -15,7 +15,7 @@ For manual installation, clone the repository and call:
 
 * Config
 
-Bind the minor mode command in direds mode map:
+Bind the minor mode command in dired:
 
 #+BEGIN_SRC elisp
 (with-eval-after-load 'dired
