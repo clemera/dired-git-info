@@ -96,19 +96,13 @@ are (see git-log PRETTY FORMATS for all):
 
 FILE default to current dired file. GITF determines the commit
 info format and defaults to `dgi-commit-message-format'."
-  (let* ((file (or file (dired-get-file-for-visit)))
-         (lfile (and (file-exists-p file)
-                     ;; get the actual displayed name, to make it work with
-                     ;; dired collapse for example
-                     (save-excursion
-                       (dired-goto-file file)
-                       (buffer-substring (point) (line-end-position))))))
-    (when (and lfile (not (member lfile '(".." "."))))
+  (let ((file (or file (dired-get-file-for-visit))))
+    (when (and file (file-exists-p file))
       (let ((msg (dgi--command-to-string
                   "git" "log" "-1"
                   (concat "--pretty="
                           (or gitf dgi-commit-message-format))
-                  lfile)))
+                  file)))
         (when (and msg (not (string= "" msg)))
           (substring msg
                      ;; skip newline
