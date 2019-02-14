@@ -146,8 +146,12 @@ info format and defaults to `dgi-commit-message-format'."
   "Get lengths of FILE as displayed by dired."
   (save-excursion
     (dired-goto-file file)
-    (length (buffer-substring (point)
-                              (line-end-position)))))
+    (let ((opos (point)))
+      (while (and (not (eolp))
+                  (or (not dired-hide-details-mode)
+                      (not (get-text-property (point) 'invisible))))
+        (forward-char 1))
+      (length (buffer-substring opos (point))))))
 
 
 (defun dgi--get-commit-messages (files)
@@ -178,6 +182,10 @@ info format and defaults to `dgi-commit-message-format'."
       (user-error "Not in a dired buffer"))
     (unless (locate-dominating-file "." ".git")
       (user-error "Not inside a git repository"))
+    (when dgi-auto-hide-details-p
+      (unless dired-hide-details-mode
+        (setq dgi--restore-no-details t)
+        (dired-hide-details-mode 1)))
     (let* ((files (dgi--save-marked
                    (dired-unmark-all-marks)
                    (dired-toggle-marks)
@@ -203,11 +211,7 @@ info format and defaults to `dgi-commit-message-format'."
                   ;; in combination with hl-line-mode overlay
                   (overlay-put ov 'display ovs)
                   ;; hl line mode should have priority
-                  (overlay-put ov 'priority -60)))))))
-      (when dgi-auto-hide-details-p
-        (unless dired-hide-details-mode
-          (setq dgi--restore-no-details t)
-          (dired-hide-details-mode 1))))))
+                  (overlay-put ov 'priority -60))))))))))
 
 
 (provide 'dired-git-info)
