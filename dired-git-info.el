@@ -96,8 +96,9 @@ are (see git-log PRETTY FORMATS for all):
 
 FILE default to current dired file. GITF determines the commit
 info format and defaults to `dgi-commit-message-format'."
-  (let ((file (or file (dired-get-file-for-visit))))
-    (when (and file (file-exists-p file))
+  (let* ((tfile (or file (dired-get-file-for-visit)))
+         (file (or (file-remote-p tfile 'localname) tfile)))
+    (when file
       (let ((msg (dgi--command-to-string
                   "git" "log" "-1"
                   (concat "--pretty="
