@@ -4,7 +4,7 @@
 
 ;; Author: Clemens Radermacher <clemera@posteo.net>
 ;; URL: https://github.com/clemera/dired-git-info
-;; Version: 0.1
+;; Version: 0.2
 ;; Package-Requires: ((emacs "25"))
 ;; Keywords: dired, files
 
