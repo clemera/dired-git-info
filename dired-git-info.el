@@ -85,10 +85,15 @@ are (see git-log PRETTY FORMATS for all):
   "If no details view has to be restored.")
 
 (defun dgi--command-to-string (program &rest args)
-  "Execute PROGRAM with arguments ARGS and return output string."
-  (with-output-to-string
-    (with-current-buffer standard-output
-      (apply #'process-file program nil t nil args))))
+  "Execute PROGRAM with arguments ARGS and return output string.
+
+If program returns non zero exit code return nil."
+  (let* ((ecode nil)
+         (output (with-output-to-string
+                    (with-current-buffer standard-output
+                      (setq ecode (apply #'process-file program nil t nil args))))))
+    (when (eq ecode 0)
+      output)))
 
 
 (defun dgi--get-commit-info (&optional file gitf)
