@@ -1,3 +1,7 @@
+#+BEGIN_HTML
+<a href="https://elpa.gnu.org/packages/clipboard-collector.html"><img alt="GNU ELPA" src="https://elpa.gnu.org/favicon.png"/></a>
+#+END_HTML
+
 * Description
 
 This Emacs packages provides a minor mode which shows git information inside
