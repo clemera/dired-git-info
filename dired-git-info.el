@@ -110,9 +110,13 @@ info format and defaults to `dgi-commit-message-format'."
                           (or gitf dgi-commit-message-format))
                   file)))
         (when (and msg (not (string= "" msg)))
-          (substring msg
-                     ;; skip newline
-                     0 -1))))))
+          (let ((msg (substring msg
+                                ;; skip newline
+                                0 -1)))
+            (if (or word-wrap
+                    (> (+ (length file) (length msg)) fill-column))
+                (concat (substring msg 0 -4) " ...")
+              msg)))))))
 
 
 (defmacro dgi--save-marked (&rest body)
