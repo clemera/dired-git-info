@@ -11,9 +11,9 @@ the dired buffer:
 
 * Installation
 
-** ELPA
+** GNU ELPA
 
-This package is available on [[https://elpa.gnu.org][ELPA]]. You can install it via =M-x package-install RET dired-git-info RET=
+This package is available on [[https://elpa.gnu.org][GNU ELPA]]. You can install it via =M-x package-install RET dired-git-info RET=
 
 ** Manual
 
@@ -34,17 +34,20 @@ For manual installation, clone the repository and call:
 
 ** Don't hide normal Dired file info
 
-By default, toggling =dired-git-info-mode= also toggles the built-in =dired-hide-details-mode=, which hides file details such as ownership, permissions and size. This behaviour can be disabled by overriding =dgi-auto-hide-details-p=:
+By default, toggling =dired-git-info-mode= also toggles the built-in
+=dired-hide-details-mode=, which hides file details such as ownership,
+permissions and size. This behaviour can be disabled by overriding
+=dgi-auto-hide-details-p=:
 
 #+BEGIN_SRC elisp
-(with-eval-after-load 'dired
-  (setq dgi-auto-hide-details-p nil))
+(setq dgi-auto-hide-details-p nil)
 #+END_SRC
 
 ** Enable automatically in every Dired buffer (if in Git repository)
 
-To enable =dired-git-info-mode= whenever you navigate to a Git repository, add the following snippet:
+To enable =dired-git-info-mode= whenever you navigate to a Git repository, use
+the following:
 #+BEGIN_SRC elisp
-(with-eval-after-load 'dired
-  (add-hook 'dired-after-readin-hook 'dired-git-info-auto-enable))
+(add-hook 'dired-after-readin-hook 'dired-git-info-auto-enable)
 #+END_SRC
+
