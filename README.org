@@ -46,9 +46,5 @@ By default, toggling =dired-git-info-mode= also toggles the built-in =dired-hide
 To enable =dired-git-info-mode= whenever you navigate to a Git repository, add the following snippet:
 #+BEGIN_SRC elisp
 (with-eval-after-load 'dired
-  (defun dired-git-info-mode-loose ()
-    "enable 'dired-git-info-mode only if current Dired buffer is in a Git repo"
-    (if (locate-dominating-file "." ".git")
-        (dired-git-info-mode)))
-  (add-hook 'dired-after-readin-hook 'dired-git-info-mode-loose))
+  (add-hook 'dired-after-readin-hook 'dired-git-info-auto-enable))
 #+END_SRC
