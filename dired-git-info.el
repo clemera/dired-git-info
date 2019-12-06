@@ -239,6 +239,15 @@ info format and defaults to `dgi-commit-message-format'."
                   ;; hl line mode should have priority
                   (overlay-put ov 'priority -60))))))))))
 
+;;;###autoload
+(defun dired-git-info-auto-enable ()
+  "Enable `dired-git-info-mode' if current dired buffer is in a git repo.
+
+Add this function to `dired-after-readin-hook' to enable the mode
+automatically inside git repos."
+  (when (locate-dominating-file "." ".git")
+    (dired-git-info-mode)))
+
 
 (provide 'dired-git-info)
 ;;; dired-git-info.el ends here
