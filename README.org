@@ -11,9 +11,9 @@ the dired buffer:
 
 * Installation
 
-** MELPA
+** ELPA
 
-[[https://melpa.org/#/getting-started][Set up MELPA]], then install via =M-x package-install RET dired-git-info=
+This package is available on [[https://elpa.gnu.org][ELPA]]. You can install it via =M-x package-install RET dired-git-info RET=
 
 ** Manual
 
