@@ -169,9 +169,10 @@ info format and defaults to `dgi-commit-message-format'."
     (with-temp-buffer
       (dolist (message (nreverse messages))
         (insert (or message "") "\n"))
-      (align-regexp (point-min)
-                    (point-max)
-                    "\\(\\s-*\\)\t" nil nil t)
+      (let ((indent-tabs-mode nil))
+        (align-regexp (point-min)
+                      (point-max)
+                      "\\(\\s-*\\)\t" nil nil t))
       (goto-char (point-min))
       (while (search-forward "\t" nil t)
         (replace-match " "))
