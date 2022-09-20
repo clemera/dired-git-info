@@ -51,3 +51,10 @@ the following:
 (add-hook 'dired-after-readin-hook 'dired-git-info-auto-enable)
 #+END_SRC
 
+** Set the spacing between the file names and the git info
+
+If you want more room between the ~dired~ filenames and the git information than
+the default 2 spaces, use the following:
+#+BEGIN_SRC elisp
+(setq dgi-spacing 5)
+#+END_SRC
