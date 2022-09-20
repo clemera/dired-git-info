@@ -78,6 +78,10 @@ are (see git-log PRETTY FORMATS for all):
            · %f: sanitized subject line, suitable for a filename"
   :type 'string)
 
+(defcustom dgi-spacing 2
+  "How many spaces between the longest filename and the commit messages"
+  :type 'integer)
+
 (defvar-local dgi--commit-ovs nil
   "Overlays which show the commit messages.")
 
@@ -220,7 +224,7 @@ info format and defaults to `dgi-commit-message-format'."
                    (dired-unmark-all-marks)
                    (dired-toggle-marks)
                    (dired-get-marked-files)))
-           (minspc  (1+ (apply #'max  (dgi--get-dired-files-length files))))
+           (minspc (+ dgi-spacing (apply #'max  (dgi--get-dired-files-length files))))
            (messages (dgi--get-commit-messages files)))
       (save-excursion
         (dolist (file files)
