@@ -220,7 +220,7 @@ info format and defaults to `dgi-commit-message-format'."
                    (dired-unmark-all-marks)
                    (dired-toggle-marks)
                    (dired-get-marked-files)))
-           (minspc  (1+ (apply #'max  (dgi--get-dired-files-length files))))
+           (minspc  (1+ (apply #'max  (or (dgi--get-dired-files-length files) '(0)))))
            (messages (dgi--get-commit-messages files)))
       (save-excursion
         (dolist (file files)
