@@ -183,6 +183,7 @@ info format and defaults to `dgi-commit-message-format'."
   "Format message MSG for current dired line."
   (let* ((le (line-end-position))
          (aw (- (window-width)
+                (* 2(- (window-total-width) (window-width)))
                 (1+ (save-excursion
                       (goto-char le)
                       (current-column))))))
